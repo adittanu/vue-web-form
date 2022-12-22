@@ -1,10 +1,10 @@
 <template>
   <form>
     <label>Email :</label>
-    <input type="email" required v-model="email" />
+    <input type="email" required v-model="email" placeholder="Your email address" />
 
     <label>Password :</label>
-    <input type="password" required v-model="password" />
+    <input type="password" required v-model="password" placeholder="Your Password" />
 
     <label>Role:</label>
     <select v-model="role">
@@ -12,41 +12,47 @@
       <option value="designer">Web Designer</option>
     </select>
 
+    <label>Skills:</label>
+    <input type="text" v-model="tempSkill" @keyup="addSkill" placeholder="Enter any your skills ended by comma (,)" />
+    <div v-for="(skill, index) in skills" :key="skill" class="pill" @click="removeSkill(index)">
+      {{ skill }}
+    </div>
+
     <div class="terms">
       <input type="checkbox" required v-model="terms" />
       <label>Accept terms and conditions</label>
-    </div>
-
-    <div>
-      <input type="checkbox" value="shaun" v-model="names" />
-      <label>Shaun</label>
-    </div>
-    <div>
-      <input type="checkbox" value="yoshi" v-model="names" />
-      <label>Yoshi</label>
-    </div>
-    <div>
-      <input type="checkbox" value="mario" v-model="names" />
-      <label>Mario</label>
     </div>
   </form>
   <p>Email : {{ email }}</p>
   <p>Password : {{ password }}</p>
   <p>Role : {{ role }}</p>
   <p>Terms accepted : {{ terms }}</p>
-  <p>Names : {{ names }}</p>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      email: "mario",
+      email: "",
       password: "",
       role: "designer",
       terms: false,
-      names: [],
+      tempSkill: "",
+      skills: [],
     };
+  },
+  methods: {
+    addSkill(e) {
+      if (e.key === "," && this.tempSkill !== ",") {
+        if (!this.skills.includes(this.tempSkill)) {
+          this.skills.push(this.tempSkill.replace(/.$/, ""));
+        }
+        this.tempSkill = "";
+      }
+    },
+    removeSkill(index) {
+      this.skills.splice(index, 1);
+    },
   },
 };
 </script>
@@ -71,17 +77,9 @@ label {
   font-weight: bold;
 }
 
-input {
-  display: block;
-  padding: 10px 6px;
-  width: 100%;
-  box-sizing: border-box;
-  border: none;
-  border-bottom: 1px solid #ddd;
-  color: #555;
-}
 input,
 select {
+  background: white;
   display: block;
   padding: 10px 6px;
   width: 100%;
@@ -90,11 +88,35 @@ select {
   border-bottom: 1px solid #ddd;
   color: #555;
 }
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid rgb(202, 246, 246);
+}
+
 input[type="checkbox"] {
   display: inline-block;
   width: 16px;
   margin: 0 10px 0 0;
   position: relative;
   top: 2px;
+}
+
+.pill {
+  display: inline-block;
+  margin: 20px 10px 0 0;
+  padding: 6px 12px;
+  background: #eee;
+  border-radius: 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  color: #777;
+  cursor: pointer;
+}
+
+input::placeholder {
+  color: rgb(210, 210, 210);
+  font-size: small;
 }
 </style>
